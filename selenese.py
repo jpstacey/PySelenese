@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-import sys, os
-from copy import deepcopy
+import os
 import unittest
+
+from copy import deepcopy
 from lxml import etree
 from selenium import selenium
 
@@ -17,8 +18,10 @@ def get_html_title(tree, default = "Untitled"):
     except AttributeError:
         return default
 
-def run_html_test(title, table, obj):
-    # The engine for running Selenium HTML in Python
+def run_html_test(table, obj):
+    """As a lambda function this is an engine for running lxml Selenese
+
+    table is an lxml document fragment; obj is the TestCase object"""
     for instruction in table.findall(".//tr"):
         args = instruction.findall("td")
         if len(args) > 2:
@@ -26,16 +29,16 @@ def run_html_test(title, table, obj):
             cmd = args.pop(0)
             obj.mapper.__getattribute__(cmd)(args)
 
-def new_sel(domain="www.google.co.uk",start=False):
+def new_sel(domain="www.google.co.uk"):
     """Create Selenium instance with defaults"""
     sel = selenium("localhost", 4444, "*firefox", "http://%s/" % domain)
-    start and sel.start()
+    sel.start()
     return sel
 
 class GenericTest(unittest.TestCase):
-    """Container class for storing Selenium HTML converted tests"""
+    """Container class for storing converted Selenese tests"""
     def setUp(self):
-        self.selenium = new_sel(start = True)
+        self.selenium = new_sel()
         self.selenium.test = self
         self.mapper = SeleniumMapper(self)
 
@@ -43,14 +46,18 @@ class GenericTest(unittest.TestCase):
         self.selenium.stop()
 
 def convert_selenese(dir='.'):
+    """Returns a unittest.TestCase subclass for testing"""
+
+    # Find and parse index.html test suite
     old_dir = os.getcwd()
     os.chdir(dir)
-
     p = etree.HTMLParser()
     x = etree.parse('index.html', p)
     if DEBUG: print "Examining test suite: %s" % get_html_title(x)
 
+    # Set up a test class to return from the function
     class ConvertedTest(GenericTest): pass
+
     i = 0
     for test in x.findall("//table[@id='suiteTable']//tr//a"):
         # Get HTML file for test
@@ -63,21 +70,13 @@ def convert_selenese(dir='.'):
             if DEBUG: print "    Converting test: %s" % test_title
 
             # Create a lambda function, give it a __doc__ so reporting is verbose
-            fn = lambda obj: run_html_test(test_title, test_table, obj)
+            fn = lambda obj: run_html_test(test_table, obj)
             fn.__setattr__("__doc__", test_title)
             # Now add it to the ConvertedTest class as an object method test_N
             type(ConvertedTest).__setattr__(ConvertedTest, "test_%d" % i, fn)
             i+=1
 
+    # Reset the directory and return our completed TestCase
     os.chdir(old_dir)
     return ConvertedTest
 
-try:
-    convert_dir = sys.argv[1]
-    sys.argv.pop(1)
-except IndexError:
-    convert_dir = "."
-MyTest = convert_selenese(convert_dir)
-
-# Run test suite, picking up on ConvertedTest().test_N for all tests N
-unittest.main()

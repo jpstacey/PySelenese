@@ -1,1 +1,57 @@
-This code is currently massively under construction and might not work
+Python Selenese translator
+--------------------------
+
+Selenium IDE lets you create Selenium tests in specially structured HTML (or
+"Selenese"). These can be easily run on your local machine but do not lend
+themselves to being run on a server via e.g. Selenium RC.
+
+This dynamically translates suites of Selenese tests into Python
+unittest.TestCase classes, which can then be run using Selenium RC within 
+the standard Python unit testing framework and using the Python Selenium 
+bindings.
+
+
+= Warning =
+
+This code is still under construction. It might break randomly and does not 
+currently support more than a fraction of Selenese keywords. If you'd like to
+improve its behaviour then please add more methods to the class in mapper.py
+to map Selenese keywords to Python-binding API calls.
+
+
+= Setup =
+
+1. Download Selenium RC http://seleniumhq.org/download/
+
+2. Unpack the server JAR at selenium-server-X/selenium-server.jar and run it
+in the background:
+
+ java -jar selenium-server.jar
+
+3. Check out this repository anywhere on your filesystem.
+
+4. Unpack the Python bindings selenium-python-client-driver-X/selenium.py 
+from Selenium RC and place it within this repository
+
+
+= Execution =
+
+Assuming your Selenese test suite is saved as ~/my-tests/index.html (with all 
+the separate test files within ~/my-tests/ too) you can run the following at 
+a command prompt:
+
+ python main.py ~/my-tests
+
+Alternatively you can run Selenese tests alongside your other unittest test
+cases using e.g:
+
+ class OneTest(unittest.TestCase):
+     # ...
+
+ class TwoTest(unittest.TestCase):
+     # ...
+
+ ThreeTest = selenese.convert_selenese(directory_name)
+
+This creates a ThreeTest class, just like a OneTest and TwoTest, which 
+unittest will pick up on and run
