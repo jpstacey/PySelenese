@@ -1,2 +1,3 @@
 selenium.py
 *.pyc
+.*.swp

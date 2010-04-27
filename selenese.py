@@ -6,6 +6,8 @@ import unittest
 from lxml import etree
 from selenium import selenium
 
+from mapper import SeleniumMapper
+
 DEBUG = True
 
 def get_html_title(tree, default = "Untitled"):
@@ -17,38 +19,20 @@ def get_html_title(tree, default = "Untitled"):
 
 def run_html_test(title, table, obj):
     # The engine for running Selenium HTML in Python
-    # TODO More code here!
     for instruction in table.findall(".//tr"):
         args = instruction.findall("td")
         if len(args) > 2:
             args = [a.text for a in args] 
             cmd = args.pop(0)
             obj.mapper.__getattribute__(cmd)(args)
-    pass
 
-class SeleniumMapper(object):
-    """Maps Selenium commands to Selenese <td> contents"""
-    def __init__(self, test):
-        self.test = test
-        self.sel = test.selenium
-
-    def open(self, args):
-        # Warning: Selenese tests don't mind 404s; Selenium RC does
-        self.sel.open(args[0])
-
-    def assertXpathCount(self, args):
-        self.test.assertEquals(self.sel.get_xpath_count(args[0]), args[1])
-
-    def assertHtmlSource(self, args):
-        self.test.assertEquals(self.sel.get_html_source(), args[0])
-
-def new_sel(domain="www.local-csp",start=False):
+def new_sel(domain="www.google.co.uk",start=False):
     """Create Selenium instance with defaults"""
     sel = selenium("localhost", 4444, "*firefox", "http://%s/" % domain)
     start and sel.start()
     return sel
 
-class ConvertedTest(unittest.TestCase):
+class GenericTest(unittest.TestCase):
     """Container class for storing Selenium HTML converted tests"""
     def setUp(self):
         self.verificationErrors = []
@@ -59,6 +43,8 @@ class ConvertedTest(unittest.TestCase):
     def tearDown(self):
         self.selenium.stop()
         self.assertEqual([], self.verificationErrors)
+
+ConvertedTest = deepcopy(GenericTest)
 
 def convert_selenese(dir='.'):
     old_dir = os.getcwd()
@@ -81,7 +67,6 @@ for test in x.findall("//table[@id='suiteTable']//tr//a"):
     # Get HTML file for test
     x_test = etree.parse(test.get("href"), p)
     test_title = get_html_title(x_test)
-
 
     # Find test table
     test_table = x_test.find("/body//table")
