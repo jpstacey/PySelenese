@@ -24,39 +24,46 @@ def run_html_test(table, obj):
     table is an lxml document fragment; obj is the TestCase object"""
     for instruction in table.findall(".//tr"):
         args = instruction.findall("td")
+        # Only call text if we've got at least the core 3 Selense <td>s
         if len(args) > 2:
-            args = [a.text for a in args] 
+            args = [a.text for a in args]
+            # Add a possible documenting string
+            (len(args) > 3) or args.append('')
+
             cmd = args.pop(0)
             obj.mapper.__getattribute__(cmd)(args)
 
-def new_sel(domain="www.google.co.uk"):
+def new_sel(domain):
     """Create Selenium instance with defaults"""
     sel = selenium("localhost", 4444, "*firefox", "http://%s/" % domain)
     sel.start()
     return sel
 
 class GenericTest(unittest.TestCase):
+    root_url = "github.com"
+
     """Container class for storing converted Selenese tests"""
     def setUp(self):
-        self.selenium = new_sel()
+        self.selenium = new_sel(self.root_url)
         self.selenium.test = self
         self.mapper = SeleniumMapper(self)
 
     def tearDown(self):
         self.selenium.stop()
 
-def convert_selenese(dir='.'):
+def convert_selenese(my_dir='.', _root_url = None):
     """Returns a unittest.TestCase subclass for testing"""
 
     # Find and parse index.html test suite
     old_dir = os.getcwd()
-    os.chdir(dir)
+    os.chdir(my_dir)
     p = etree.HTMLParser()
     x = etree.parse('index.html', p)
     if DEBUG: print "Examining test suite: %s" % get_html_title(x)
 
     # Set up a test class to return from the function
     class ConvertedTest(GenericTest): pass
+    if _root_url: ConvertedTest.root_url = _root_url
 
     i = 0
     for test in x.findall("//table[@id='suiteTable']//tr//a"):

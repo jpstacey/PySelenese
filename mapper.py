@@ -11,20 +11,26 @@ class SeleniumMapper(object):
         self.sel.open(args[0])
 
     def assertXpathCount(self, args):
-        self.test.assertEquals(self.sel.get_xpath_count(args[0]), args[1])
+        self.test.assertEquals(self.sel.get_xpath_count(args[0]), args[1], args[2])
 
     def assertHtmlSource(self, args):
-        self.test.assertEquals(self.sel.get_html_source(), args[0])
+        self.test.assertEquals(self.sel.get_html_source(), args[0], args[2])
+
+    def assertTextNotPresent(self, args):
+        self.test.assert_(not self.sel.is_text_present(args[0]), args[2])
 
     def assertTextPresent(self, args):
-        self.test.assert_(self.sel.is_text_present(args[0]))
+        self.test.assert_(self.sel.is_text_present(args[0]), args[2])
 
     def click(self, args):
         self.sel.click(args[0])
 
     def clickAndWait(self, args):
-        self.click(args)
+        self.sel.click(args[0])
         self.sel.wait_for_page_to_load(30000)
+
+    def deleteAllVisibleCookies(self, args):
+        self.sel.delete_all_visible_cookies()
 
     def type(self, args):
         self.sel.type(args[0], args[1])
