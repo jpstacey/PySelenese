@@ -6,14 +6,14 @@ import unittest
 from copy import deepcopy
 from lxml import etree
 from selenium import selenium
-
 from mapper import SeleniumMapper
 
-import inspect
-
+# Master debug setting
 DEBUG = True
+SeleniumMapper.DEBUG = DEBUG
 
 class PySeleneseError(Exception):
+    """Subclass for PySelenese internal exceptions"""
     pass
 
 def get_html_title(tree, default = "Untitled"):

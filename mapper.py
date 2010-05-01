@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 class SeleniumMapper(object):
+    # Master debug setting in selenese.py - suggest you change it there
+    DEBUG = False
+
     """Maps Selenium commands to Selenese <td> contents"""
     def __init__(self, test):
         self.test = test
@@ -31,7 +34,7 @@ class SeleniumMapper(object):
 
     def _debug(self, args):
         """Debugging"""
-        print args[2]
+        if self.DEBUG: print args[2]
 
     def _fail(self, args):
         """Selenese does not have a native fail, but it can come in handy for debugging"""
