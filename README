@@ -64,3 +64,13 @@ PySelenese can itself be tested and contains its own internal test suite. Run:
  python test.py
 
 You might see some debug messages, but no failures.
+
+
+= Known issues =
+
+The main issue is that not all of Selenium's test syntax has been transcribed in
+mapper.py yet. Please let me know if your tests fail on a particular Selenium
+keyword; alternatively, feel free to fork the github repository and add the
+mapping yourself.
+
+ http://github.com/jpstacey/PySelenese

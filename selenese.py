@@ -13,6 +13,9 @@ import inspect
 
 DEBUG = True
 
+class PySeleneseError(Exception):
+    pass
+
 def get_html_title(tree, default = "Untitled"):
     """Return a decent title from the current HTML page tree"""
     try:
@@ -32,11 +35,11 @@ def run_html_test(obj):
         index = int(obj._testMethodName.replace("test_", ""))
         table = obj.test_tables[index]
     except ValueError:
-        raise Exception("Can't work out which file this test function came from.")
+        raise PySeleneseError("Can't work out which file this test function came from.")
     except AttributeError:
-        raise Exception("Can't work out what my test function is called: has unittest.py changed?")
+        raise PySeleneseError("Can't work out what my test function is called: has unittest.py changed?")
     except KeyError:
-        raise Exception("I think I'm test #%d but my test class doesn't have the HTML for that." % index)
+        raise PySeleneseError("I think I'm test #%d but my test class doesn't have the HTML for that." % index)
 
     for instruction in table.findall(".//tr"):
         args = instruction.findall("td")
@@ -47,6 +50,10 @@ def run_html_test(obj):
             (len(args) > 3) or args.append('')
 
             cmd = args.pop(0)
+            try:
+                obj.mapper.__getattribute__(cmd)
+            except AttributeError:
+                raise PySeleneseError("Selenese command '%s' not implemented yet, or maybe a syntax error." % cmd)
             obj.mapper.__getattribute__(cmd)(args)
 
 def new_sel(domain):
