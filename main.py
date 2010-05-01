@@ -17,7 +17,5 @@ except IndexError:
 
 MyTest = convert_selenese(convert_dir, u)
 
-print dir(MyTest)
-
 # Run test suite, picking up on ConvertedTest().test_N for all tests N
-#unittest.main()
+unittest.main()

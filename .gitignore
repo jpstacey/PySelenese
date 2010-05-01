@@ -1,3 +1,4 @@
 selenium.py
 *.pyc
 .*.swp
+*~

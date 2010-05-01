@@ -54,4 +54,13 @@ cases using e.g:
  ThreeTest = selenese.convert_selenese(directory_name)
 
 This creates a ThreeTest class, just like a OneTest and TwoTest, which 
-unittest will pick up on and run
+unittest will pick up on and run.
+
+
+= Testing =
+
+PySelenese can itself be tested and contains its own internal test suite. Run:
+
+ python test.py
+
+You might see some debug messages, but no failures.

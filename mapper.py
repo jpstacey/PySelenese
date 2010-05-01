@@ -29,6 +29,14 @@ class SeleniumMapper(object):
         self.sel.click(args[0])
         self.sel.wait_for_page_to_load(30000)
 
+    def _debug(self, args):
+        """Debugging"""
+        print args[2]
+
+    def _fail(self, args):
+        """Selenese does not have a native fail, but it can come in handy for debugging"""
+        self.test.fail(args[2])
+
     def deleteAllVisibleCookies(self, args):
         self.sel.delete_all_visible_cookies()
 
