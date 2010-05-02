@@ -8,10 +8,6 @@ from lxml import etree
 from selenium import selenium
 from mapper import SeleniumMapper
 
-# Master debug setting
-DEBUG = True
-SeleniumMapper.DEBUG = DEBUG
-
 class PySeleneseError(Exception):
     """Subclass for PySelenese internal exceptions"""
     pass
@@ -64,6 +60,7 @@ def new_sel(domain):
 
 class GenericTest(unittest.TestCase):
     root_url = "github.com"
+    DEBUG = False
 
     test_tables = {}
 
@@ -72,11 +69,12 @@ class GenericTest(unittest.TestCase):
         self.selenium = new_sel(self.root_url)
         self.selenium.test = self
         self.mapper = SeleniumMapper(self)
+        self.mapper.DEBUG = self.DEBUG
 
     def tearDown(self):
         self.selenium.stop()
 
-def convert_selenese(my_dir='.', _root_url = None):
+def convert_selenese(my_dir='.', _root_url = None, DEBUG = False):
     """Returns a unittest.TestCase subclass for testing"""
 
     # Find and parse index.html test suite
@@ -84,12 +82,14 @@ def convert_selenese(my_dir='.', _root_url = None):
     os.chdir(my_dir)
     p = etree.HTMLParser()
     x = etree.parse('index.html', p)
-    if DEBUG: print "Examining test suite: %s" % get_html_title(x)
 
     # Set up a test class to return from the function
     class ConvertedTest(GenericTest): pass
     if _root_url: ConvertedTest.root_url = _root_url
+    ConvertedTest.DEBUG = DEBUG
 
+    # Begin conversion
+    if DEBUG: print "Examining test suite: %s" % get_html_title(x)
     i = 0
     test_tables = {}
     for test in x.findall("//table[@id='suiteTable']//tr//a"):

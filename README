@@ -51,10 +51,13 @@ cases using e.g:
  class TwoTest(unittest.TestCase):
      # ...
 
- ThreeTest = selenese.convert_selenese(directory_name)
+ ThreeTest = selenese.convert_selenese(directory_name, root_url)
 
 This creates a ThreeTest class, just like a OneTest and TwoTest, which 
-unittest will pick up on and run.
+unittest will pick up on and run. Selenium IDE tests require a root_url, as
+they all run within the same domain owing to browser security restrictions.
+This is not encoded within the tests as it is assumed that the tests are to
+be run off the same domain as the website under test.
 
 
 = Testing =
@@ -63,14 +66,20 @@ PySelenese can itself be tested and contains its own internal test suite. Run:
 
  python test.py
 
-You might see some debug messages, but no failures.
+This should run near-silently as per a normal unittest run. Alternatively, 
+tests can be run in debug mode with:
+
+ python test.py
+
+You should then see some debug messages, both from the conversion process and
+from the tests themselves, but no failures.
 
 
 = Known issues =
 
-The main issue is that not all of Selenium's test syntax has been transcribed in
-mapper.py yet. Please let me know if your tests fail on a particular Selenium
-keyword; alternatively, feel free to fork the github repository and add the
-mapping yourself.
+The main issue is that not all of Selenium's test syntax has been transcribed
+in mapper.py yet. Please let me know if your tests fail on a particular 
+Selenium keyword; alternatively, feel free to fork the github repository and 
+add the mapping yourself.
 
  http://github.com/jpstacey/PySelenese
