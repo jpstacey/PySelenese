@@ -12,8 +12,10 @@ except IndexError:
     pass
 
 # Test basic multi-file tests
-BasicTests = convert_selenese("tests", "http://github.com/", DEBUG)
+BasicTests = convert_selenese("tests", "github.com", DEBUG)
 # Also test more than one class
-SecondTest = convert_selenese("tests/secondtest", "http://github.com/", DEBUG)
+SecondTest = convert_selenese("tests/secondtest", "github.com", DEBUG)
+# Test supported actions
+ActionsTest = convert_selenese("tests/actions", "github.com", DEBUG)
 
 unittest.main()

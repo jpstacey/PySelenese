@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://github.com/" />
+<title>Javascript actions</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Javascript actions</td></tr>
+</thead><tbody>
+<tr>
+	<td class="action is-helper">open</td>
+	<td class="var1">/</td>
+	<td class="var2"></td>
+        <td class="comment"></td>
+</tr>
+<tr>
+	<td class="action is-test">answerOnNextPrompt</td>
+	<td class="var1">pyselenese-test-answeronnextprompt</td>
+	<td class="var2"></td>
+        <td class="comment"></td>
+</tr>
+
+<tr>
+	<td class="action is-test">runScript</td>
+	<td class="var1">e = document.createElement("div"); e.setAttribute("id", "pyselenese-test-runscript"); document.getElementsByTagName("body")[0].appendChild(e);</td>
+	<td class="var2"></td>
+        <td class="comment">Run some Javascript in the AUT window to create a test div</td>
+</tr>
+<tr>
+	<td class="action is-assert">assertXpathCount</td>
+	<td class="var1">//body/div[@id='pyselenese-test-runscript']</td>
+	<td class="var2">1</td>
+        <td class="comment">Check that runScript created the test div</td>
+</tr>
+<tr>
+	<td class="action is-helper">runScript</td>
+	<td class="var1">e = document.createElement("div"); e.setAttribute("id", window.prompt()); document.getElementsByTagName("body")[0].appendChild(e);</td>
+	<td class="var2"></td>
+        <td class="comment">Capture an answerOnNextPrompt</td>
+</tr>
+<tr>
+	<td class="action is-assert">assertXpathCount</td>
+	<td class="var1">//body/div[@id='pyselenese-test-answeronnextprompt']</td>
+	<td class="var2">1</td>
+        <td class="comment">Check that answerOnNextPrompt named the test div</td>
+</tr>
+<tr>
+	<td class="action is-test">addScript</td>
+	<td class="var1">selenium.doOpen('/login');</td>
+	<td class="var2">pyselenese-js-1</td>
+	<td class="comment">Using addScript to call the selenium JS object methods directly</td>
+</tr>
+<tr>
+	<td class="action is-helper">waitForPageToLoad</td>
+	<td class="var1"></td>
+	<td class="var2"></td>
+	<td class="comment"></td>
+</tr>
+<tr>
+	<td class="action is-test">assertTextPresent</td>
+	<td class="var1">Password</td>
+	<td class="var2"></td>
+	<td class="comment">addScript ought to have forwarded us to the /login page</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
+

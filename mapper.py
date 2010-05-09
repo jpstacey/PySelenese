@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+class MapperException(Exception):
+    """Excecptions in mapper layer"""
+    pass
+
 class SeleniumMapper(object):
     # Master debug setting in selenese.py - suggest you change it there
     DEBUG = False
@@ -9,12 +13,17 @@ class SeleniumMapper(object):
         self.test = test
         self.sel = test.selenium
 
-    def open(self, args):
-        # Warning: Selenese tests don't mind 404s; Selenium RC does
-        self.sel.open(args[0])
+    def addScript(self, args):
+        self.sel.add_script(args[0], args[1])
 
-    def assertXpathCount(self, args):
-        self.test.assertEquals(self.sel.get_xpath_count(args[0]), args[1], args[2])
+    def allowNativeXpath(self, args):
+        self.sel.allow_native_xpath(args[0])
+
+    def answerOnNextPrompt(self, args):
+        self.sel.answer_on_next_prompt(args[0])
+
+    def assertAlert(self, args):
+        self.test.assertEquals(self.sel.get_alert(), args[0], args[2])
 
     def assertHtmlSource(self, args):
         self.test.assertEquals(self.sel.get_html_source(), args[0], args[2])
@@ -24,6 +33,9 @@ class SeleniumMapper(object):
 
     def assertTextPresent(self, args):
         self.test.assert_(self.sel.is_text_present(args[0]), args[2])
+
+    def assertXpathCount(self, args):
+        self.test.assertEquals(self.sel.get_xpath_count(args[0]), args[1], args[2])
 
     def click(self, args):
         self.sel.click(args[0])
@@ -36,15 +48,25 @@ class SeleniumMapper(object):
         """Debugging"""
         if self.DEBUG: print args[2]
 
+    def deleteAllVisibleCookies(self, args):
+        self.sel.delete_all_visible_cookies()
+
     def _fail(self, args):
         """Selenese does not have a native fail, but it can come in handy for debugging"""
         self.test.fail(args[2])
 
-    def deleteAllVisibleCookies(self, args):
-        self.sel.delete_all_visible_cookies()
+    def open(self, args):
+        # Warning: Selenese tests don't mind 404s; Selenium RC does
+        self.sel.open(args[0])
+
+    def runScript(self, args):
+        self.sel.run_script(args[0])
 
     def type(self, args):
         self.sel.type(args[0], args[1])
+
+    def waitForPageToLoad(self, args):
+        self.sel.wait_for_page_to_load(30000)
 
 if __name__ == '__main__':
     print "\n".join([a for a in dir(SeleniumMapper) if a[0:2] != "__"])
