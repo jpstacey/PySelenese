@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 
+import re
+
 class MapperException(Exception):
     """Excecptions in mapper layer"""
     pass
+
+def _camelcase_to_underscore(text):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', text)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 class SeleniumMapper(object):
     # Master debug setting in selenese.py - suggest you change it there
@@ -24,6 +30,9 @@ class SeleniumMapper(object):
 
     def assertAlert(self, args):
         self.test.assertEquals(self.sel.get_alert(), args[0], args[2])
+
+    def assertElementPresent(self, args):
+        self.test.assert_(self.sel.is_element_present(args[0]), args[2])
 
     def assertHtmlSource(self, args):
         self.test.assertEquals(self.sel.get_html_source(), args[0], args[2])
