@@ -34,6 +34,9 @@ class SeleniumMapper(object):
     def assertElementPresent(self, args):
         self.test.assert_(self.sel.is_element_present(args[0]), args[2])
 
+    def verifyElementPresent(self, args):
+        self.test.assert_(self.sel.is_element_present(args[0]), args[2])
+
     def assertHtmlSource(self, args):
         self.test.assertEquals(self.sel.get_html_source(), args[0], args[2])
 
@@ -41,6 +44,9 @@ class SeleniumMapper(object):
         self.test.assert_(not self.sel.is_text_present(args[0]), args[2])
 
     def assertTextPresent(self, args):
+        self.test.assert_(self.sel.is_text_present(args[0]), args[2])
+
+    def verifyTextPresent(self, args):
         self.test.assert_(self.sel.is_text_present(args[0]), args[2])
 
     def assertXpathCount(self, args):
