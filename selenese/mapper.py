@@ -29,7 +29,7 @@ class SeleniumMapper(object):
             return object.__getattribute__(self, name)
         except AttributeError, e:
             # If not, try to get from the child self.sel object
-            sel_method = self.sel.__getattribute__(name)
+            sel_method = getattr(self.sel, name)
             # Wrap in a lambda so we can call it safely with args
             # based on the number of <td>s rather than the method
             # signature - see below
@@ -72,9 +72,6 @@ class SeleniumMapper(object):
     def assertXpathCount(self, args):
         self.test.assertEquals(self.sel.get_xpath_count(args[0]), args[1], args[2])
 
-    def click(self, args):
-        self.sel.click(args[0])
-
     def clickAndWait(self, args):
         self.sel.click(args[0])
         self.sel.wait_for_page_to_load(30000)
@@ -96,12 +93,6 @@ class SeleniumMapper(object):
 
     def runScript(self, args):
         self.sel.run_script(args[0])
-
-    def select(self, args):
-        self.sel.select(args[0], args[1])
-
-    def type(self, args):
-        self.sel.type(args[0], args[1])
 
     """Set: verify"""
     def verifyElementPresent(self, args):
