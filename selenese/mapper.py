@@ -28,13 +28,11 @@ class SeleniumMapper(object):
     def answerOnNextPrompt(self, args):
         self.sel.answer_on_next_prompt(args[0])
 
+    """Set: assert"""
     def assertAlert(self, args):
         self.test.assertEquals(self.sel.get_alert(), args[0], args[2])
 
     def assertElementPresent(self, args):
-        self.test.assert_(self.sel.is_element_present(args[0]), args[2])
-
-    def verifyElementPresent(self, args):
         self.test.assert_(self.sel.is_element_present(args[0]), args[2])
 
     def assertHtmlSource(self, args):
@@ -44,9 +42,6 @@ class SeleniumMapper(object):
         self.test.assert_(not self.sel.is_text_present(args[0]), args[2])
 
     def assertTextPresent(self, args):
-        self.test.assert_(self.sel.is_text_present(args[0]), args[2])
-
-    def verifyTextPresent(self, args):
         self.test.assert_(self.sel.is_text_present(args[0]), args[2])
 
     def assertXpathCount(self, args):
@@ -77,8 +72,18 @@ class SeleniumMapper(object):
     def runScript(self, args):
         self.sel.run_script(args[0])
 
+    def select(self, args):
+        self.sel.select(args[0], args[1])
+
     def type(self, args):
         self.sel.type(args[0], args[1])
+
+    """Set: verify"""
+    def verifyElementPresent(self, args):
+        self.test.assert_(self.sel.is_element_present(args[0]), args[2])
+
+    def verifyTextPresent(self, args):
+        self.test.assert_(self.sel.is_text_present(args[0]), args[2])
 
     def waitForPageToLoad(self, args):
         self.sel.wait_for_page_to_load(30000)
