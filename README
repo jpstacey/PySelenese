@@ -40,7 +40,9 @@ Assuming your Selenese test suite is saved as ~/my-tests/index.html (with all
 the separate test files within ~/my-tests/ too) you can run the following at 
 a command prompt:
 
- python main.py ~/my-tests
+ python main.py ~/my-tests [selenium-server]
+
+The server defaults to "localhost"
 
 Alternatively you can run Selenese tests alongside your other unittest test
 cases using e.g:
@@ -64,12 +66,12 @@ be run off the same domain as the website under test.
 
 PySelenese can itself be tested and contains its own internal test suite. Run:
 
- python test.py
+ python test.py [selenium-server]
 
 This should run near-silently as per a normal unittest run. Alternatively, 
-tests can be run in debug mode with:
+tests can be run in debug mode with e.g:
 
- python test.py
+ python test.py localhost debug
 
 You should then see some debug messages, both from the conversion process and
 from the tests themselves, but no failures.

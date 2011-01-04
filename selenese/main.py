@@ -15,7 +15,14 @@ try:
 except IndexError:
     u = "localhost"
 
-MyTest = convert_selenese(convert_dir, u)
+try:
+    s = sys.argv[2]
+    sys.argv.pop(2)
+except IndexError:
+    s = "localhost"
+
+
+MyTest = convert_selenese(convert_dir, u, s)
 
 # Run test suite, picking up on ConvertedTest().test_N for all tests N
 unittest.main()

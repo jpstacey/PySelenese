@@ -52,21 +52,22 @@ def run_html_test(obj):
                 raise PySeleneseError("Selenese command '%s' not implemented yet, or maybe a syntax error." % cmd)
             obj.mapper.__getattribute__(cmd)(args)
 
-def new_sel(domain):
+def new_sel(domain, server="localhost"):
     """Create Selenium instance with defaults"""
-    sel = selenium("localhost", 4444, "*firefox", "http://%s/" % domain)
+    sel = selenium(server, 4444, "*firefox", "http://%s/" % domain)
     sel.start()
     return sel
 
 class GenericTest(unittest.TestCase):
     root_url = "github.com"
+    server = "localhost"
     DEBUG = False
 
     test_tables = {}
 
     """Container class for storing converted Selenese tests"""
     def setUp(self):
-        self.selenium = new_sel(self.root_url)
+        self.selenium = new_sel(self.root_url, self.server)
         self.selenium.test = self
         self.mapper = SeleniumMapper(self)
         self.mapper.DEBUG = self.DEBUG
@@ -74,7 +75,7 @@ class GenericTest(unittest.TestCase):
     def tearDown(self):
         self.selenium.stop()
 
-def convert_selenese(my_dir='.', _root_url = None, DEBUG = False):
+def convert_selenese(my_dir='.', _root_url = None, _server = "localhost", DEBUG = False):
     """Returns a unittest.TestCase subclass for testing"""
 
     # Find and parse index.html test suite
@@ -86,6 +87,7 @@ def convert_selenese(my_dir='.', _root_url = None, DEBUG = False):
     # Set up a test class to return from the function
     class ConvertedTest(GenericTest): pass
     if _root_url: ConvertedTest.root_url = _root_url
+    ConvertedTest.server = _server
     ConvertedTest.DEBUG = DEBUG
 
     # Begin conversion
