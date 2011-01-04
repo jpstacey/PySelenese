@@ -16,11 +16,10 @@ except IndexError:
     u = "localhost"
 
 try:
-    s = sys.argv[2]
-    sys.argv.pop(2)
+    s = sys.argv[1]
+    sys.argv.pop(1)
 except IndexError:
     s = "localhost"
-
 
 MyTest = convert_selenese(convert_dir, u, s)
 
